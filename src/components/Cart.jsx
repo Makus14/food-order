@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import logo from "../assets/logo.jpg";
 import { fetchAvailableMeals } from "../http.js";
+import Error from "./Error/Error.jsx";
 
 export default function Cart() {
   const [isFetching, setIsFetching] = useState();
@@ -25,13 +26,16 @@ export default function Cart() {
     console.log(fetchMeals);
   }, []);
 
+  if (error) {
+    return <Error title="An error occurred!" message={error.message} />;
+  }
+
   return (
     <div id="meals">
       {isFetching && <p>Fetching data...</p>}
-      {!isFetching && fetchMeals.length === 0 && <p>Error to fetch data.</p>}
       {!isFetching &&
         fetchMeals.length > 0 &&
-        fetchMeals.map((meal, index) => (
+        fetchMeals.map((meal) => (
           <div key={meal.id} className="meal-item">
             <div className="article">
               <img src={`http://localhost:3000/${meal.image}`} />

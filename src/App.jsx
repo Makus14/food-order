@@ -1,4 +1,4 @@
-import Header from "./components/Header.jsx";
+import Header from "../src/components/Header/Header.jsx";
 import Meal from "./components/Meal.jsx";
 
 function App() {

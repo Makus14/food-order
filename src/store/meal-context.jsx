@@ -18,8 +18,62 @@ function mealReducer(state, action) {
         ...state,
         meals: action.payload,
       };
+    case "ADD_MEAL": {
+      const updatedMeals = [...state.cartMeals];
+
+      const existingCartMealIndex = updatedMeals.findIndex(
+        (cartMeal) => cartMeal.id === action.payload
+      );
+      const existingCartMeal = updatedMeals[existingCartMealIndex];
+
+      if (existingCartMeal) {
+        const updatedMeal = {
+          ...existingCartMeal,
+          quantity: existingCartMeal.quantity + 1,
+        };
+        updatedMeals[existingCartMealIndex] = updatedMeal;
+      } else {
+        const product = state.meals.find(
+          (product) => product.id === action.payload
+        );
+        updatedMeals.push({
+          id: action.payload,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+        });
+      }
+
+      return {
+        ...state,
+        cartMeals: updatedMeals,
+      };
+    }
+    case "UPDATE_MEAL": {
+      const updatedMeals = [...state.cartMeals];
+      const updatedMealIndex = updatedMeals.findIndex(
+        (cartMeal) => cartMeal.id === action.payload.productId
+      );
+
+      const updatedMeal = {
+        ...updatedMeals[updatedMealIndex],
+      };
+
+      updatedMeal.quantity += action.payload.amount;
+
+      if (updatedMeal.quantity <= 0) {
+        updatedMeals.splice(updatedMealIndex, 1);
+      } else {
+        updatedMeals[updatedMealIndex] = updatedMeal;
+      }
+
+      return {
+        ...state,
+        cartMeals: updatedMeals,
+      };
+    }
     default:
-      return state;
+      throw new Error(`Unknown action type: ${action.type}`);
   }
 }
 
@@ -29,6 +83,7 @@ export default function MealContextProvider({ children }) {
 
   const [mealState, dispatch] = useReducer(mealReducer, {
     meals: [],
+    cartMeals: [],
   });
 
   useEffect(() => {
@@ -46,10 +101,30 @@ export default function MealContextProvider({ children }) {
     fetchData();
   }, []);
 
+  function handleAddMealToCart(id) {
+    dispatch({
+      type: "ADD_MEAL",
+      payload: id,
+    });
+  }
+
+  function handleUpdateCartMealQuantity(productId, amount) {
+    dispatch({
+      type: "UPDATE_MEAL",
+      payload: {
+        productId,
+        amount,
+      },
+    });
+  }
+
   const ctxValue = {
     meals: mealState.meals,
+    cartMeals: mealState.cartMeals,
     isFetching,
     error,
+    addMealToCart: handleAddMealToCart,
+    updateMealQuantity: handleUpdateCartMealQuantity,
   };
 
   return (

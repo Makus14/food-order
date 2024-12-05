@@ -3,7 +3,8 @@ import { createContext, useEffect, useReducer, useState } from "react";
 import { fetchAvailableMeals } from "../http.js";
 
 export const MealContext = createContext({
-  items: [],
+  meals: [],
+  cartMeals: [],
   isFetching: false,
   error: null,
   addMealToCart: () => {},
@@ -15,7 +16,7 @@ function mealReducer(state, action) {
     case "SET_MEALS":
       return {
         ...state,
-        items: action.payload,
+        meals: action.payload,
       };
     default:
       return state;
@@ -27,7 +28,7 @@ export default function MealContextProvider({ children }) {
   const [error, setError] = useState();
 
   const [mealState, dispatch] = useReducer(mealReducer, {
-    items: [],
+    meals: [],
   });
 
   useEffect(() => {
@@ -46,7 +47,7 @@ export default function MealContextProvider({ children }) {
   }, []);
 
   const ctxValue = {
-    items: mealState.items,
+    meals: mealState.meals,
     isFetching,
     error,
   };

@@ -3,7 +3,7 @@ import Error from "./Error/Error.jsx";
 import { MealContext } from "../store/meal-context.jsx";
 
 export default function Meal() {
-  const { items, isFetching, error } = useContext(MealContext);
+  const { meals, isFetching, error } = useContext(MealContext);
 
   if (error) {
     return <Error title="An error occurred!" message={error.message} />;
@@ -13,8 +13,8 @@ export default function Meal() {
     <div id="meals">
       {isFetching && <p>Fetching data...</p>}
       {!isFetching &&
-        items.length > 0 &&
-        items.map((meal) => (
+        meals.length > 0 &&
+        meals.map((meal) => (
           <div key={meal.id} className="meal-item">
             <div className="article">
               <img src={`http://localhost:3000/${meal.image}`} />

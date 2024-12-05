@@ -17,8 +17,8 @@ export default function Header() {
   if (cartQuantity > 0) {
     modalActions = (
       <>
-        <button>Close</button>
-        <button>Go to Checkout</button>
+        <button className="text-button">Close</button>
+        <button className="button">Go to Checkout</button>
       </>
     );
   }

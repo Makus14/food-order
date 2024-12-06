@@ -7,7 +7,6 @@ import { MealContext } from "../../store/meal-context.jsx";
 
 export default function Header() {
   const { cartMeals } = useContext(MealContext);
-
   const modal = useRef();
 
   const cartQuantity = cartMeals.length > 0 ? `(${cartMeals.length})` : null;
@@ -16,22 +15,9 @@ export default function Header() {
     modal.current.open();
   }
 
-  let modalActions = <button className="text-button">Close</button>;
-
-  if (cartMeals.length > 0) {
-    modalActions = (
-      <>
-        <button className="text-button">Close</button>
-        <button className="button" onClick={() => console.log(cartMeals)}>
-          Go to Checkout
-        </button>
-      </>
-    );
-  }
-
   return (
     <>
-      <CartModal ref={modal} title="Your Cart" actions={modalActions} />
+      <CartModal ref={modal} onClose={() => modal.current.close()} />
       <header id="main-header">
         <div id="title">
           <img id="img" src={logo} alt="Logo of the site" />

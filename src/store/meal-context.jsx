@@ -9,6 +9,7 @@ export const MealContext = createContext({
   error: null,
   addMealToCart: () => {},
   updateMealQuantity: () => {},
+  clearCart: () => {},
 });
 
 function mealReducer(state, action) {
@@ -72,6 +73,11 @@ function mealReducer(state, action) {
         cartMeals: updatedMeals,
       };
     }
+    case "CLEAR_CART":
+      return {
+        ...state,
+        cartMeals: [],
+      };
     default:
       throw new Error(`Unknown action type: ${action.type}`);
   }
@@ -108,6 +114,12 @@ export default function MealContextProvider({ children }) {
     });
   }
 
+  function handleClearCart() {
+    dispatch({
+      type: "CLEAR_CART",
+    });
+  }
+
   function handleUpdateCartMealQuantity(productId, amount) {
     dispatch({
       type: "UPDATE_MEAL",
@@ -125,6 +137,7 @@ export default function MealContextProvider({ children }) {
     error,
     addMealToCart: handleAddMealToCart,
     updateMealQuantity: handleUpdateCartMealQuantity,
+    clearCart: handleClearCart,
   };
 
   return (

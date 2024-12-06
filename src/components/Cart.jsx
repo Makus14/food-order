@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import { MealContext } from "../store/meal-context.jsx";
 
-export default function Cart() {
+export default function Cart({ setTotalAmount }) {
   const { cartMeals, updateMealQuantity } = useContext(MealContext);
 
   const totalPrice = cartMeals.reduce(
@@ -10,6 +10,7 @@ export default function Cart() {
     0
   );
   const formattedTotalPrice = `$${totalPrice.toFixed(2)}`;
+  setTotalAmount(formattedTotalPrice);
 
   return (
     <div>
